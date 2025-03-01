@@ -1,0 +1,35 @@
+{% extends 'layout.html' %} 
+{% block title %} 
+Shows 
+{% endblock %} 
+{% block content %}
+    <section>
+        <h1>Upcoming Shows</h1>
+        <h2 style ="font-size:3rem; text-decoration:underline;">
+            <a href="mailto:darknessemergedband@gmail.com">Book us</a>
+        </h2>
+        {% if shows %}
+            {% for show in shows %}
+            <article class="show">
+                <div style="width: 1080px;">
+                    <img
+                        class="banner"
+                        src="{{ show.flyer.url }}"
+                        alt="{{ show.title }}"
+                        style="width: 480px;"
+                    />
+                    <h2>{{ show.title }}</h2>
+                    <p style="text-align: center;">{{ show.show_location }}</p>
+                    <p style="text-align: center;">{{ show.show_date }}</p>
+                    <p style="text-align: center;">{{ show.doors_open }}</p>
+                </div>
+            </article>
+            {% endfor %}
+        {% else %}
+            <div>
+                <h1>No upcoming shows. </h1>
+            </div>
+        {% endif %}
+    </section>
+{% endblock %}
+
