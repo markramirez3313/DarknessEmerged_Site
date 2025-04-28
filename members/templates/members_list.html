@@ -1,0 +1,30 @@
+{% extends 'layout.html' %} 
+{% block title %} 
+Members
+{% endblock %} 
+{% block content %}
+    <section>
+        <h1>Meet the band!</h1>
+        {% if members %}
+            {% for member in members %}
+            <article class="member">
+                <div style="width: 1080px;">
+                    <img
+                        class="banner"
+                        src="{{ member.memberPhoto.url }}"
+                        alt="{{ member.name }}"
+                        style="width: 480px;"
+                    />
+                    <h2>{{ member.name }}</h2>
+                    <p style="text-align: center;">{{ member.bio }}</p>
+                </div>
+            </article>
+            {% endfor %}
+        {% else %}
+            <div>
+                <h1>!Error: No band members added!</h1>
+            </div>
+        {% endif %}
+    </section>
+{% endblock %}
+

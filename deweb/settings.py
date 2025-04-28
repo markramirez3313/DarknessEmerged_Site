@@ -21,10 +21,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-9m16v(l#t+r1u%9=oluw4!yk(1n3hdn30!aj_8!ahjn$b47_fp'
+SECRET_KEY = 'aeV##e#$2gPTMkEkyS%dTnsvzVFgJ7^RL*UcaPbMQgydp^K54w'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'shows',
+    'members',
 ]
 
 MIDDLEWARE = [
@@ -129,3 +130,14 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#Security settings
+SECURE_HSTS_SECONDS = 3600
+SECURE_SSL_REDIRECT = True
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+SECURE_FRAME_DENY = True
+
+
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True

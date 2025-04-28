@@ -2,33 +2,46 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: "Garamond", serif;
 }
 
 
 body {
-    /* min-height: 100vh; */
+    background-image: url("/media/main.webp");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
     font-size: 3rem;
     display: flex;
     flex-flow: column;
-
 }
 
 nav {
     padding: 1rem;
-    background-color: white;
-    font-size: 2.5rem;
+    font-size: 2rem;
     text-align: center;
+    color: whitesmoke;
+
 }
 
 h1 {
     padding: 3rem;
     text-align: center;
-    font-size: 5rem;
+    font-size: 3.5rem;
+    color: whitesmoke;
 }
 
 h2 {
     text-align: center;
-    font-size: 3.5rem;
+    font-size: 2rem;
+    color: whitesmoke;
+}
+
+p {
+    color: whitesmoke;
+    font-size: 1.5rem;
+
 }
 
 a {
@@ -55,10 +68,13 @@ banner {
 }
 
 div {
-    display: flex;
+    padding: 2.5rem;
+    display: block;
     justify-content: center;
     align-items: center;
     text-align: center;
+    font-size: 2rem;
+    max-width: 1080px;
 }
 
 img {

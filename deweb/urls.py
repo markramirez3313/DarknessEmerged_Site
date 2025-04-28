@@ -31,6 +31,7 @@ urlpatterns = [
     path('', views.homepage),
     path('about/', views.about),
     path('shows/', include('shows.urls')),
+    path('members/', include('members.urls'))
 ]
 
 urlpatterns += static(settings.MEDIA_URL,
