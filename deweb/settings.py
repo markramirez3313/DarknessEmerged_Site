@@ -26,7 +26,7 @@ SECRET_KEY = 'aeV##e#$2gPTMkEkyS%dTnsvzVFgJ7^RL*UcaPbMQgydp^K54w'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ['webapp-2573022.pythonanywhere.com', 'www.darknessemerged.com']
 
 
 # Application definition
@@ -57,7 +57,7 @@ ROOT_URLCONF = 'deweb.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['templates'],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -78,8 +78,11 @@ WSGI_APPLICATION = 'deweb.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'markramirez3313$default',
+        'USER': 'markramirez3313' ,
+        'PASSWORD': 'D@rkn3$$3m3rg3d',
+        'HOST': 'markramirez3313.mysql.pythonanywhere-services.com',
     }
 }
 
@@ -108,7 +111,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'US/Central'
 
 USE_I18N = True
 

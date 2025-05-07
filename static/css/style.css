@@ -7,14 +7,13 @@
 
 
 body {
+    position: fixed;
     background-image: url("/media/main.webp");
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: center;
-    font-size: 3rem;
-    display: flex;
-    flex-flow: column;
+
 }
 
 nav {
@@ -26,7 +25,6 @@ nav {
 }
 
 h1 {
-    padding: 3rem;
     text-align: center;
     font-size: 3.5rem;
     color: whitesmoke;
@@ -36,6 +34,7 @@ h2 {
     text-align: center;
     font-size: 2rem;
     color: whitesmoke;
+    width: 80vw;
 }
 
 p {
@@ -55,29 +54,19 @@ a:hover {
 
 main {
     flex-grow: 1;
-    display: grid;
+    display: block;
     place-content: center;
 }
 
-banner {
-    display: block;
-    width: 200px;
-    height: auto;
-    margin: 0 auto;
-
+.banner {
+    display: inline;
 }
 
 div {
-    padding: 2.5rem;
-    display: block;
+    display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
-    font-size: 2rem;
-    max-width: 1080px;
-}
-
-img {
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    flex-flow:column;
 }
