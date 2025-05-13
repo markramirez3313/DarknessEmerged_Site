@@ -1,10 +1,10 @@
 from django.db import models
-from django.contrib.auth.models import User
+#from django.contrib.auth.models import User
 
 # Create your models here.
 class UserPayment(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    stripe_customer_id = models.CharField(max_length=255)
+    #user = models.ForeignKey(User, on_delete=models.CASCADE)
+    stripe_customer = models.CharField(max_length=255)
     stripe_checkout_id = models.CharField(max_length=255)
     stripe_product_id = models.CharField(max_length=255)
     product_name = models.CharField(max_length=255)
@@ -13,5 +13,5 @@ class UserPayment(models.Model):
     currency = models.CharField(max_length=3)
     has_paid = models.BooleanField(default=False)
 
-    def _str_(self):
-        return f"{self.user.username} - {self.product_name} - Paid: {self.has_paid}"
+    def __str__(self):
+        return f"{self.stripe_customer} - {self.product_name} - Paid: {self.has_paid}"
