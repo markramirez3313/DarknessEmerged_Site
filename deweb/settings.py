@@ -12,9 +12,15 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 
+from environ import Env
+env = Env()
+env.read_env()
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+BASE_URL = "https://www.darknessemerged.com"
 
 
 # Quick-start development settings - unsuitable for production
@@ -40,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'shows',
     'members',
+    'merch',
 ]
 
 MIDDLEWARE = [
@@ -144,3 +151,5 @@ SECURE_FRAME_DENY = True
 
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
+
+STRIPE_SECRET_KEY = env('STRIPE_SECRET_KEY_TEST', default="secret")

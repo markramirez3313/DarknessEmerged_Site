@@ -23,15 +23,16 @@ from django.views.static import serve
 
 
 urlpatterns = [
-    re_path(r'^media/(?P<path>.*)$', serve, 
+    re_path(r'^media/(?P<path>.*)$', serve,
             {'document_root':settings.MEDIA_ROOT}),
-    re_path(r'^static/(?P<path>.*)$', serve, 
+    re_path(r'^static/(?P<path>.*)$', serve,
             {'document_root':settings.STATIC_ROOT}),
     path('admin/', admin.site.urls),
     path('', views.homepage),
     path('about/', views.about),
     path('shows/', include('shows.urls')),
-    path('members/', include('members.urls'))
+    path('members/', include('members.urls')),
+    path('merch/', include('merch.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL,
