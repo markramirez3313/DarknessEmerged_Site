@@ -1,6 +1,9 @@
 from django.shortcuts import render, redirect, reverse
 import stripe
 from django.conf import settings
+from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse
 from .models import UserPayment
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -57,3 +60,27 @@ def payment_successful(request):
 
 def payment_cancelled(request):
     return render(request, 'payment_cancelled.html')
+
+@require_POST
+@csrf_exempt
+def stripe_webhook(request):
+    endpoint_secret = settings.STRIPE_WEBHOOK_SECRET
+    payload = request.body
+    signature_header = request.META['HTTP_STRIPE_SIGNATURE']
+    event = None
+
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, signature_header, endpoint_secret
+        )
+    except:
+        return HttpResponse(status=400)
+
+    if event['type'] == 'check.session.completed':
+        session = event['data']['object']
+        checkout_session_id = session.get('id')
+        user_payment = UserPayment.objects.get(stripe_checkout_id=checkout_session_id)
+        user_payment.has_paid = True
+        user_payment.save()
+
+    return HttpResponse(status=200)
