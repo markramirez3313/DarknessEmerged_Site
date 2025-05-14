@@ -16,13 +16,12 @@
 <body>
     <header>
         <nav>
-            <ul style="display:flex; justify-content:center; List-style-type: none;">
+            <ul style="display:flex; List-style-type: none; justify-content:center;">
                 <li><a href="/"> Home &emsp;</a></li>
                 <li><a href="{% url 'members' %}"> About &emsp;</a></li>
                 <li><a href="{% url 'shows' %}"> Shows &emsp;</a></li>
                 <li><a href="{% url 'shop' %}"> Merch &emsp;</a></li>
-                <li>{% include 'partials/menu-cart.html' %}
-                </li>
+                <li>{% include 'partials/menu-cart.html' %}</li>
             </ul>
         </nav>
     </header>

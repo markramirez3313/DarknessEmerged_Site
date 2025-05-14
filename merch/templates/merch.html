@@ -4,24 +4,28 @@ Merch
 {% endblock %}
 {% block content %}
 
-<div class="max-w-4xl mx-auto px-8 py-24">
-    <div class="grid grid-cols-3 gap-6">
-        <div class="col-span-2 rounded-xl">
-            <img style="rounded-xl w-full h-auto" src="{{ product.image }}">
+<div>
+    <div>
+        <div>
+            <img style="border-radius: 12px; width:50vw;" src="{{ product.image }}">
         </div>
-        <div class="pt-32">
+        <div>
             <h2>{{ product.name }}</h2>
-            <p class="text-lg">{{ product.price }}</p>
+            <h2>${{ product.price }}</h2>
+            <p>{{ product.description }}</p>
             {% if not product.in_cart %}
-                <a href="{% url 'add_to_cart' product.id %}" class="button !block !rounded-full !bg-black hover:!bg-neutral-500 text-center">
-                    Add to Cart
-                </a>
+                <button style="background-color:black; color:black; font-size: 25px; border-radius:12px; margin-top:25px;">
+                    <a href="{% url 'add_to_cart' product.id %}">
+                        Add to Cart
+                    </a>
+                </button>
                 {% else %}
-                <a href="" class="button !block !rounded-full !bg-green-600 hover:!bg-green-700 text-center">
-                    Added to Cart
-                </a>
+                <button style="background-color:green; font-size: 25px; border-radius:12px; margin-top:25px;">
+                    <a href="">
+                        Added to Cart
+                    </a>
+                </button>
             {% endif %}
-            <p class="pt-8 text-sm">{{ product.description }}</p>
         </div>
     </div>
 </div>

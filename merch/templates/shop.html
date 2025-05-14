@@ -4,22 +4,20 @@ Merch
 {% endblock %}
 {% block content %}
 
-<div class="max-w-6xl mx-auto p-12">
+<div>
     <h1>Shop</h1>
     <h2>Shop is not operational and is still being implemeted. Shop will be up soon!</h2>
-    <div class="mx-auto py-2">
-        <div class="flex items-center flex-wrap">
+    <div>
+        <div style="display:block;">
             {% for product in products %}
-            <product-item class="block w-full md:w-1/3 xl:w-1/4 md:p-2">
-                <a href="{% url 'merch' product.id %}" class="block aspect-square bg-gray-100 rounded-xl">
-                    <img class="rounded-xl hover:shadow-lg" src="{{ product.image }}">
-                </a>
-                <div class="pt-3">
-                    {{ product.name }}
+            <product-item>
+                <div>
+                    <a href="{% url 'merch' product.id %}" style="">
+                        <img style="border-radius:12px; width:50vw;" src="{{ product.image }}">
+                    </a>
+                    <h2>{{ product.name }}</h2>
+                    <h2>${{ product.price }}</h2>
                 </div>
-                <p class="pt-1 text-gray-400">
-                    {{ product.price }}
-                </p>
             </product-item>
             {% endfor %}
         </div>
