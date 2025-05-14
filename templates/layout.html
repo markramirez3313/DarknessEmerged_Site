@@ -14,13 +14,18 @@
     <script src="{% static 'js/main.js' %}" defer></script>
 </head>
 <body>
-    <nav>
-        <a href="/"> Home &emsp;</a>
-        <a href="{% url 'members' %}"> About &emsp;</a>
-        <a href="{% url 'shows' %}"> Shows &emsp;</a>
-        <a href="{% url 'merch' %}"> Merch &emsp;</a>
-
-    </nav>
+    <header>
+        <nav>
+            <ul style="display:flex; justify-content:center; List-style-type: none;">
+                <li><a href="/"> Home &emsp;</a></li>
+                <li><a href="{% url 'members' %}"> About &emsp;</a></li>
+                <li><a href="{% url 'shows' %}"> Shows &emsp;</a></li>
+                <li><a href="{% url 'shop' %}"> Merch &emsp;</a></li>
+                <li>{% include 'partials/menu-cart.html' %}
+                </li>
+            </ul>
+        </nav>
+    </header>
     <main>
 
         {% block content %}

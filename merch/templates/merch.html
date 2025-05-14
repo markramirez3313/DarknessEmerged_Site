@@ -7,20 +7,21 @@ Merch
 <div class="max-w-4xl mx-auto px-8 py-24">
     <div class="grid grid-cols-3 gap-6">
         <div class="col-span-2 rounded-xl">
-            <img style="rounded-xl w-full h-auto" src="https://res.cloudinary.com/dpuzdancn/image/upload/f_auto,q_auto/v1/static/uekrd91rurs6jogdn5bu">
+            <img style="rounded-xl w-full h-auto" src="{{ product.image }}">
         </div>
         <div class="pt-32">
-           <h2>{{ product.name }}</h2>
-           <p class="text-lg">{{ product_price }}</p>
-
-           <form enctype="multipart/form-data" method="post" role="product_page">
-            {% csrf_token %}
-            <input type="hidden" name="price_id" value="price_1RNzkdDV4IH0qgqQ7OOBVXwT">
-            <input type="hidden" name="quantity" value="1">
-            <button type="submit" style="width:60px;height:30px;font-size:20px;" data-bind-href="pricing">Buy</button>
-           </form>
-
-           <p class="pt-8 text-sm">{{ product.description }}</p>
+            <h2>{{ product.name }}</h2>
+            <p class="text-lg">{{ product.price }}</p>
+            {% if not product.in_cart %}
+                <a href="{% url 'add_to_cart' product.id %}" class="button !block !rounded-full !bg-black hover:!bg-neutral-500 text-center">
+                    Add to Cart
+                </a>
+                {% else %}
+                <a href="" class="button !block !rounded-full !bg-green-600 hover:!bg-green-700 text-center">
+                    Added to Cart
+                </a>
+            {% endif %}
+            <p class="pt-8 text-sm">{{ product.description }}</p>
         </div>
     </div>
 </div>

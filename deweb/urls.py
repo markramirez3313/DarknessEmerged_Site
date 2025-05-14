@@ -32,7 +32,7 @@ urlpatterns = [
     path('about/', views.about),
     path('shows/', include('shows.urls')),
     path('members/', include('members.urls')),
-    path('merch/', include('merch.urls')),
+    path('shop/', include('merch.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL,

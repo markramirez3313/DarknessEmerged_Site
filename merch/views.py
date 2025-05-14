@@ -4,36 +4,38 @@ from django.conf import settings
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
-from .models import UserPayment
+from .models import *
+from .utils import *
+from .cart import Cart
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 # Create your views here.
-def merch_view(request):
-    product_id = 'prod_SIawWYkhxmlUwJ'
-    product = stripe.Product.retrieve(product_id)
-    prices = stripe.Price.list(product=product_id)
-    price = prices.data[0]
-    product_price = price.unit_amount / 100.0
+def shop_view(request):
+    products_list = stripe.Product.list()
+    products = []
 
-    if request.method == 'POST':
-        price_id = request.POST.get('price_id')
-        quantity = int(request.POST.get('quantity'))
-        checkout_session = stripe.checkout.Session.create(
-            line_items = [
-                {
-                    'price': price_id,
-                    'quantity': quantity,
-                },
-            ],
-            payment_method_types = ['card'],
-            mode = 'payment',
-            customer_creation = 'always',
-            success_url = f'{settings.BASE_URL}{reverse("payment_successful")}?session_id={{CHECKOUT_SESSION_ID}}',
-            cancel_url = f'{settings.BASE_URL}{reverse("payment_cancelled")}',
-        )
-        return redirect(checkout_session.url, code=303)
-    return render(request, 'merch.html', {'product': product, 'product_price': product_price})
+    for product in products_list['data']:
+        if product.get('metadata', {}).get('category') == "shop":
+            products.append(get_product_details(product))
+
+    return render(request, 'shop.html', {'products': products})
+
+def merch_view(request, product_id):
+    product = stripe.Product.retrieve(product_id)
+    product_details = get_product_details(product)
+
+    cart = Cart(request)
+    product_details['in_cart'] = product_id in cart.cart_session
+
+    return render(request, 'merch.html', {'product': product_details})
+
+def add_to_cart(request, product_id):
+    cart = Cart(request)
+    cart.add(product_id)
+    return redirect('merch', product_id)
+
+
 
 def payment_successful(request):
     checkout_session_id = request.GET.get('session_id', None)
@@ -45,7 +47,6 @@ def payment_successful(request):
 
         line_item = stripe.checkout.Session.list_line_items(checkout_session_id).data[0]
         UserPayment.objects.get_or_create(
-            #user = ,
             stripe_customer = customer_id,
             stripe_checkout_id = checkout_session_id,
             stripe_product_id = line_item.price.product,
