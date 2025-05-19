@@ -1,0 +1,51 @@
+{% extends 'layout.html' %}
+{% block title %}
+Cart
+{% endblock %}
+{% block content %}
+
+<div>
+    <h1>My Cart</h1>
+    <div>
+        <div>
+            <ul style="list-style-type: none;">
+                {% for product in cart %}
+                <li>
+                    <a href="">
+                        <img src="{{ product.image }}" style="width:25vw;">
+                    </a>
+                    <div>
+                        <span style="color:white;">{{ product.name }}</span>
+                        <form
+                            hx-post="{% url 'update_checkout' product.id %}"
+                            hx-target="#checkout_total"
+                            hx-swap="outerHTML"
+                            hx-trigger="change">
+                            {% csrf_token %}
+                            <select name="quantity">
+                                {% for i in quantity_range %}
+                                    <option
+                                        value="{{ i }}"
+                                        {% if i == product.quantity %}
+                                            selected
+                                        {% endif %}>
+                                        {{ i }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </form>
+                        <a href="{% url 'remove_from_cart' product.id %}">
+                            Remove
+                        </a>
+                    </div>
+                    <div id="product-total-{{ product.id }}" style="color:white; font-size:2.5rem;">
+                        ${{ product.total_price|floatformat:2 }}
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% include 'partials/checkout-total.html' %}
+    </div>
+</div>
+{% endblock %}

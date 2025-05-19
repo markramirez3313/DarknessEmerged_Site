@@ -12,6 +12,7 @@
     </title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <script src="{% static 'js/main.js' %}" defer></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
 </head>
 <body>
     <header>
@@ -21,7 +22,11 @@
                 <li><a href="{% url 'members' %}"> About &emsp;</a></li>
                 <li><a href="{% url 'shows' %}"> Shows &emsp;</a></li>
                 <li><a href="{% url 'shop' %}"> Merch &emsp;</a></li>
-                <li>{% include 'partials/menu-cart.html' %}</li>
+                <li hx-get="{% url 'hx_menu_cart' %}"
+                    hx-trigger="hx_menu_cart from:body"
+                    hx-swap="innerHTML">
+                    {% include 'partials/menu-cart.html' %}
+                </li>
             </ul>
         </nav>
     </header>

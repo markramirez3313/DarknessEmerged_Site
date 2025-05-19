@@ -45,4 +45,4 @@ class Cart:
             self.save()
 
     def get_total_cost(self):
-        return sum(produt_item['total_price'] for product_item in self)
+        return sum(product_item['total_price'] for product_item in self)

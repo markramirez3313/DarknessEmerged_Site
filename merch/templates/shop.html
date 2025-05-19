@@ -7,21 +7,17 @@ Merch
 <div>
     <h1>Shop</h1>
     <h2>Shop is not operational and is still being implemeted. Shop will be up soon!</h2>
-    <div>
-        <div style="display:block;">
-            {% for product in products %}
-            <product-item>
-                <div>
-                    <a href="{% url 'merch' product.id %}" style="">
-                        <img style="border-radius:12px; width:50vw;" src="{{ product.image }}">
-                    </a>
-                    <h2>{{ product.name }}</h2>
-                    <h2>${{ product.price }}</h2>
-                </div>
-            </product-item>
-            {% endfor %}
+    {% for product in products %}
+    <product-item>
+        <div>
+            <a href="{% url 'merch' product.id %}">
+                <img style="border-radius:12px; width:30vw;" src="{{ product.image }}">
+            </a>
+            <h2>{{ product.name }}</h2>
+            <h2>${{ product.price|floatformat:2 }}</h2>
         </div>
-    </div>
+    </product-item>
+    {% endfor %}
 </div>
 
 {% endblock %}
