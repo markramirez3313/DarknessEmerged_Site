@@ -7,6 +7,7 @@ from django.http import HttpResponse
 from .models import *
 from .utils import *
 from .cart import Cart
+from .forms import *
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -66,6 +67,29 @@ def remove_from_cart(request, product_id):
     cart.remove(product_id)
     return redirect('cart')
 
+def checkout_view(request):
+    form = ShippingForm()
+
+    if request.method == 'POST':
+        form = ShippingForm(request.POST)
+        if form.is_valid():
+            shipping_info = form.save(commit=False)
+            shipping_info.email = form.cleaned_data['email'].lower()
+            shipping_info.save()
+
+            cart = Cart(request)
+            checkout_session = create_checkout_session(cart, shipping_info.email)
+
+            CheckoutSession.objects.create(
+                checkout_id = checkout_session.id,
+                shipping_info = shipping_info,
+                total_cost = cart.get_total_cost(),
+            )
+
+            return redirect(checkout_session.url, code=303)
+
+    return render(request, 'checkout.html', {'form': form})
+
 def payment_successful(request):
     checkout_session_id = request.GET.get('session_id', None)
 
@@ -74,17 +98,13 @@ def payment_successful(request):
         customer_id = session.customer
         customer = stripe.Customer.retrieve(customer_id)
 
-        line_item = stripe.checkout.Session.list_line_items(checkout_session_id).data[0]
-        UserPayment.objects.get_or_create(
-            stripe_customer = customer_id,
-            stripe_checkout_id = checkout_session_id,
-            stripe_product_id = line_item.price.product,
-            product_name = line_item.description,
-            quantity = line_item.quantity,
-            price = line_item.price.unit_amount / 100.0,
-            currency = line_item.price.currency,
-            has_paid = True,
-        )
+        if settings.CART_SESSION_ID in request.session:
+            del request.session[settings.CART_SESSION_ID]
+
+        if settings.DEBUG:
+            checkout = CheckoutSession.objects.get(checkout_id=checkout_session_id)
+            checkout.has_paid = True
+            checkout.save()
 
     return render(request, 'payment_successful.html', {'customer': customer})
 
@@ -109,8 +129,8 @@ def stripe_webhook(request):
     if event['type'] == 'check.session.completed':
         session = event['data']['object']
         checkout_session_id = session.get('id')
-        user_payment = UserPayment.objects.get(stripe_checkout_id=checkout_session_id)
-        user_payment.has_paid = True
-        user_payment.save()
+        checkout = CheckoutSession.objects.get(checkout_id=checkout_session_id)
+        checkout.has_paid = True
+        checkout.save()
 
     return HttpResponse(status=200)

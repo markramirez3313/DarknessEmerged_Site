@@ -11,7 +11,7 @@ Merch
         </div>
         <div>
             <h2>{{ product.name }}</h2>
-            <h2>${{ product.price }}</h2>
+            <h2>${{ product.price|floatformat:2  }}</h2>
             <p>{{ product.description }}</p>
             {% include 'partials/cart-button.html' %}
         </div>
