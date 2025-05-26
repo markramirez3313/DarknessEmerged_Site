@@ -1,20 +1,26 @@
 from django.db import models
-#from django.contrib.auth.models import User
+
+import stripe
+from django.conf import settings
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 # Create your models here.
-class UserPayment(models.Model):
-    #user = models.ForeignKey(User, on_delete=models.CASCADE)
-    stripe_customer = models.CharField(max_length=255)
-    stripe_checkout_id = models.CharField(max_length=255)
-    stripe_product_id = models.CharField(max_length=255)
-    product_name = models.CharField(max_length=255)
-    quantity = models.IntegerField(default=1)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    currency = models.CharField(max_length=3)
-    has_paid = models.BooleanField(default=False)
+class ProductSize(models.Model):
+    name = models.CharField(max_length=50)
+    size = models.CharField(max_length=50)
 
     def __str__(self):
-        return f"{self.stripe_customer} - {self.product_name} - Paid: {self.has_paid}"
+        return self.name
+
+class ProductVariation(models.Model):
+    product_id = models.CharField(max_length=255)
+    sizes = models.ManyToManyField(ProductSize)
+
+
+    def __str__(self):
+        product = stripe.Product.retrieve(self.product_id)
+        return product['name']
+
 
 class ShippingInfo(models.Model):
     email = models.EmailField()

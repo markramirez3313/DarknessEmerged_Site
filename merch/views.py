@@ -23,19 +23,38 @@ def shop_view(request):
     return render(request, 'shop.html', {'products': products})
 
 def merch_view(request, product_id):
+    product_variation = ProductVariation.objects.filter(product_id=product_id).first()
+    if product_variation:
+        size = request.GET.get('size') or 'M'
+
+
     product = stripe.Product.retrieve(product_id)
     product_details = get_product_details(product)
 
     cart = Cart(request)
     product_details['in_cart'] = product_id in cart.cart_session
 
-    return render(request, 'merch.html', {'product': product_details})
+    context = {
+        'product': product_details,
+    }
+
+    if product_variation:
+        context.update({
+            'product_variation': product_variation,
+            'size': size,
+        })
+
+    return render(request, 'merch.html', context)
 
 def add_to_cart(request, product_id):
-    cart = Cart(request)
-    cart.add(product_id)
-
     product = stripe.Product.retrieve(product_id)
+    product_variation = ProductVariation.objects.filter(product_id=product_id).first()
+    size = request.GET.get('size') or ('m' if product_variation else None)
+    size = size.upper() if size else None
+
+    cart = Cart(request)
+    cart.add(product_id, size=size)
+
     product_details = get_product_details(product)
     product_details['in_cart'] = product_id in cart.cart_session
 
@@ -50,14 +69,17 @@ def cart_view(request):
     quantity_range = list(range(1,11))
     return render(request, 'cart.html', {'quantity_range': quantity_range})
 
-def update_checkout(request, product_id):
+def update_checkout(request, item_id):
     quantity = int(request.POST.get('quantity', 1))
     cart = Cart(request)
-    cart.add(product_id, quantity)
+    product_id = cart.cart_session.get(item_id)['product_id']
+    cart.add(product_id, quantity, item_id=item_id)
 
     product = stripe.Product.retrieve(product_id)
     product_details = get_product_details(product)
     product_details['total_price'] = product_details['price'] * quantity
+    product_details['item_id'] = item_id
+
     response = render(request, 'partials/checkout-total.html', {'product': product_details})
     response['HX-Trigger'] = 'hx_menu_cart'
     return response

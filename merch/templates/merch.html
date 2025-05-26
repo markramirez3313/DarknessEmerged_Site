@@ -5,17 +5,54 @@ Merch
 {% block content %}
 
 <div>
-    <div>
-        <div>
-            <img style="border-radius: 12px; width:30vw;" src="{{ product.image }}">
+    <div class="container bg-white justify-content-center text-center">
+        <div class = "container">
+            <img
+                style="border-radius: 12px; width:30vw; margin-top:100px;"
+                src="{{ product.image }}">
         </div>
-        <div>
+        <div class="container" style="margin-top:100px;">
             <h2>{{ product.name }}</h2>
             <h2>${{ product.price|floatformat:2  }}</h2>
+            {% if product_variation %}
+                {% if product_variation.sizes.all %}
+                <div class="container">
+                    Size:
+                    {% for product_size in product_variation.sizes.all %}
+                        <button
+                        type="button"
+                        class="btn btn-dark"
+                        onclick="updateUrl('size', '{{ product_size.size|lower }}')"
+                        style="height:40px;width:60px; font-size:1rem; {% if product_size.size|lower == size|lower %} border-style:solid; border-width:thick; border-color: red; {% endif %}">
+                            {{ product_size.size }}
+                        </button>
+                    {% endfor %}
+                {% endif %}
+                </div>
+            {% endif %}
             <p>{{ product.description }}</p>
-            {% include 'partials/cart-button.html' %}
+            <button
+                type="button"
+                class="btn btn-dark"
+                style="margin-bottom:100px;"
+                hx-get="{% url 'add_to_cart' product.id %}?size={{ request.GET.size}}"
+                hx-target="this"
+                hx-swap="outerHTML">
+                    Add to Cart
+            </button>
         </div>
     </div>
 </div>
+
+<script>
+    // Update URL with selected options
+    function updateUrl(key, value){
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.set(key, value);
+        const newUrl = window.location.pathname + '?' + urlParams.toString();
+        window.history.pushState({}, '', newUrl);
+        window.location.reload();
+    }
+</script>
 
 {% endblock %}

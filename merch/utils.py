@@ -3,6 +3,7 @@ from django.conf import settings
 from django.urls import reverse
 
 
+
 def get_product_details(product):
     prices = stripe.Price.list(product=product['id'])
     price = prices['data'][0]
@@ -11,6 +12,7 @@ def get_product_details(product):
         'name': product['name'],
         'image': product['images'][0],
         'description': product['description'],
+        'price_in_cent': price['unit_amount'],
         'price': price['unit_amount'] / 100,
     }
 
@@ -19,10 +21,20 @@ def get_product_details(product):
 def create_checkout_session(cart, customer_email):
     line_items = []
     for item in cart:
-        prices = stripe.Price.list(product=item['id'])
-        price = prices.data[0]
+        options = []
+        if item.get('size') is not None:
+            options.append(f"Size: {item['size']}")
+        description = ", ".join(options) if options else item['description']
         line_items.append({
-            'price': price.id,
+            'price_data':{
+                'currency': 'usd',
+                'product_data': {
+                    'name': item['name'],
+                    'description': description,
+                    'images': [item['image']],
+                },
+                'unit_amount': item['price_in_cent']
+            },
             'quantity': item['quantity'],
         })
 
@@ -32,7 +44,7 @@ def create_checkout_session(cart, customer_email):
         mode='payment',
         customer_creation='always',
         success_url=f'{settings.BASE_URL}{reverse("payment_successful")}?session_id={{CHECKOUT_SESSION_ID}}',
-        cancel_url=f'{settings.BASE_URL}{reverse("payment_cancelled")}',
+        cancel_url=f'{settings.BASE_URL}{reverse("cart")}',
         customer_email=customer_email,
     )
 

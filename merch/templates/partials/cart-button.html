@@ -1,16 +1,8 @@
-<div id="cart-button">
-{% if not product.in_cart %}
-    <button style="background-color:black; color:white; font-size: 25px; border-radius:12px; margin-top:25px;"
-            hx-get="{% url 'add_to_cart' product.id %}"
-            hx-target="#cart-button"
-            hx-swap="outerHTML">
-            Add to Cart
-    </button>
-    {% else %}
-    <button style="background-color:green; font-size: 25px; border-radius:12px; margin-top:25px;">
-        <a href="{% url 'cart' %}">
-            Added to Cart
-        </a>
-    </button>
-{% endif %}
-</div>
+<button
+    type="button"
+    class="btn btn-success"
+    style="margin-bottom:100px;">
+    <a style="color:white" href="{% url 'cart' %}">
+        Go to Cart
+    </a>
+</button>

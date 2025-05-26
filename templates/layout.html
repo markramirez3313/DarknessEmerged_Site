@@ -10,28 +10,42 @@
         Django App
         {% endblock %}
     </title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    <!--
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    -->
     <script src="{% static 'js/main.js' %}" defer></script>
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
 </head>
-<body>
+<body
+    style="background-image: url(/media/main.webp); background-size: cover; background-repeat: no-repeat; background-attachment: fixed; background-position: center; width:100%;">
     <header>
-        <nav>
-            <ul style="display:flex; List-style-type: none; justify-content:center;">
-                <li><a href="/"> Home &emsp;</a></li>
-                <li><a href="{% url 'members' %}"> About &emsp;</a></li>
-                <li><a href="{% url 'shows' %}"> Shows &emsp;</a></li>
-                <li><a href="{% url 'shop' %}"> Merch &emsp;</a></li>
-                <li hx-get="{% url 'hx_menu_cart' %}"
+        <div class="container-fluid">
+            <ul class="nav fs-5 justify-content-center navbar-dark">
+                <li class="nav-item">
+                    <a class="nav-link link-light" href="/">Home &emsp;</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link link-light" href="{% url 'members' %}"> About &emsp;</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link link-light" href="{% url 'shows' %}"> Shows &emsp;</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link link-light" href="{% url 'shop' %}"> Merch &emsp;</a>
+                </li>
+                <li class="nav-item"
+                    hx-get="{% url 'hx_menu_cart' %}"
                     hx-trigger="hx_menu_cart from:body"
                     hx-swap="innerHTML">
-                    {% include 'partials/menu-cart.html' %}
+                        {% include 'partials/menu-cart.html' %}
                 </li>
             </ul>
-        </nav>
+        </div>
     </header>
     <main>
-
         {% block content %}
         {% endblock %}
     </main>

@@ -74,3 +74,19 @@ div {
 .custom-form{
 
 }
+
+button:hover {
+    background-color:red;
+    transition: 0.7s;
+}
+
+.cart {
+    background-color:black;
+    color:white;
+    font-size: 25px;
+    border-radius:12px;
+    margin-top:25px;
+    width:25vw;"
+}
+}
+

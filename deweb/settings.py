@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'shows',
     'members',
     'merch',
+    'bootstrap5',
 ]
 
 MIDDLEWARE = [

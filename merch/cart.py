@@ -1,6 +1,7 @@
 import stripe
 from django.conf import settings
 from .utils import get_product_details
+import uuid
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -14,17 +15,21 @@ class Cart:
         self.cart_session = cart_session
 
     def __iter__(self):
-        for product_id, item in self.cart_session.items():
-            product = stripe.Product.retrieve(product_id)
+        for item_id, item in self.cart_session.items():
+            product = stripe.Product.retrieve(item['product_id'])
             product_details = get_product_details(product)
 
             yield {
-                'id': product_id,
+                'id': item_id,
+                'product_id': product.id,
                 'image': product_details['image'],
                 'name': product_details['name'],
+                'description': product_details['description'],
+                'price_in_cent': product_details['price_in_cent'],
                 'price': product_details['price'],
                 'quantity': item['quantity'],
                 'total_price': product_details['price'] * item['quantity'],
+                'size': item['size'],
             }
 
     def __len__(self):
@@ -33,10 +38,20 @@ class Cart:
     def save(self):
         self.session.modified = True
 
-    def add(self, product_id, quantity=1):
-        self.cart_session[product_id] = {
-            'quantity': quantity,
-        }
+    def add(self, product_id, quantity=1, size=None, item_id=None):
+        if not item_id:
+            item_id = str(uuid.uuid4())
+            while item_id in self.cart_session:
+                item_id = str(uuid.uuid4())
+
+        if item_id in self.cart_session:
+            self.cart_session[item_id]['quantity'] = quantity
+        else:
+            self.cart_session[item_id] = {
+                'product_id': product_id,
+                'quantity': quantity,
+                'size': size,
+            }
         self.save()
 
     def remove(self, product_id):
